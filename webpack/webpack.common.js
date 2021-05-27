@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
@@ -19,8 +20,18 @@ module.exports = {
         ],
       },
       {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        test: /\.(s[ac]|c)ss$/i,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              //Support url depended assets in css
+              publicPath: '',
+            },
+          },
+          'css-loader',
+          'sass-loader',
+        ],
       },
       {
         test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
@@ -40,6 +51,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '..', './src/index.html'),
     }),
+    new MiniCssExtractPlugin(),
     // new CopyPlugin({
     //   patterns: [{ from: 'source', to: 'dest' }],
     // }),
